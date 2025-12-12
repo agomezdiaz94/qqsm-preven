@@ -37,7 +37,7 @@ const sfxIncorrect = document.getElementById("sfx-incorrect");
 
 // Estado de juego
 let totalGroups = 1;
-let groups = []; // [{name:'A', score:0}]
+let groups = [];
 let currentGroupIndex = 0;
 
 let questionsPool = [];
@@ -52,15 +52,10 @@ let lifelinesUsed = {
   "audience": false
 };
 
-// Utilidad: cambiar pantalla
+// Cambiar pantalla
 function showScreen(id) {
   [screenStart, screenReady, screenGame, screenResults].forEach(s => s.classList.remove("active"));
-  const map = {
-    "start": screenStart,
-    "ready": screenReady,
-    "game": screenGame,
-    "results": screenResults
-  };
+  const map = { start: screenStart, ready: screenReady, game: screenGame, results: screenResults };
   map[id].classList.add("active");
 }
 
@@ -74,19 +69,19 @@ function initGroups(n) {
   currentGroupIndex = 0;
 }
 
-// Preparar preguntas
+// Inicializar preguntas
 function initQuestions() {
   questionsPool = PREGUNTAS.map(q => ({ ...q, respuestas: { ...q.respuestas } }));
   currentQuestionIndex = 0;
 }
 
-// Configurar pantalla de “¿Están listos?”
+// Texto de pantalla Ready
 function updateReadyText() {
   const g = groups[currentGroupIndex];
   readyText.textContent = `¿Está listo el Grupo ${g.name}?`;
 }
 
-// Iniciar cronómetro
+// Cronómetro
 function startTimer() {
   clearInterval(timerInterval);
   timerValue = 20;
@@ -105,20 +100,11 @@ function startTimer() {
     }
   }, 1000);
 }
+function pauseTimer() { isPaused = true; }
+function resumeTimer() { isPaused = false; }
+function updateTimerDisplay() { timerEl.textContent = String(timerValue); }
 
-function pauseTimer() {
-  isPaused = true;
-}
-
-function resumeTimer() {
-  isPaused = false;
-}
-
-function updateTimerDisplay() {
-  timerEl.textContent = String(timerValue);
-}
-
-// Habilitar/Deshabilitar respuestas
+// Respuestas
 function resetAnswers() {
   answerButtons.forEach(btn => {
     btn.classList.remove("correct", "incorrect", "disabled");
@@ -127,19 +113,11 @@ function resetAnswers() {
     btn.style.opacity = "1";
   });
 }
-function lockAnswers() {
-  answerButtons.forEach(btn => {
-    btn.disabled = true;
-  });
-}
+function lockAnswers() { answerButtons.forEach(btn => btn.disabled = true); }
 
-// Cargar pregunta actual
 function loadQuestion() {
   const q = questionsPool[currentQuestionIndex];
-  if (!q) {
-    nextGroupOrResults();
-    return;
-  }
+  if (!q) { nextGroupOrResults(); return; }
 
   try { sfxQuestion.currentTime = 0; sfxQuestion.play().catch(()=>{}); } catch (e) {}
 
@@ -154,7 +132,6 @@ function loadQuestion() {
   startTimer();
 }
 
-// Responder
 function onAnswerClick(key) {
   const q = questionsPool[currentQuestionIndex];
   if (!q) return;
@@ -180,14 +157,11 @@ function onAnswerClick(key) {
   proceedAfterQuestion();
 }
 
-function revealCorrect(playSound = false) {
+function revealCorrect() {
   const q = questionsPool[currentQuestionIndex];
   if (!q) return;
   const correctBtn = answerButtons.find(b => b.dataset.key === q.correcta);
   if (correctBtn) correctBtn.classList.add("correct");
-  if (playSound) {
-    try { sfxQuestion.currentTime = 0; sfxQuestion.play().catch(()=>{}); } catch (e) {}
-  }
 }
 
 function proceedAfterQuestion() {
@@ -203,7 +177,6 @@ function proceedAfterQuestion() {
 
 function nextGroupOrResults() {
   clearInterval(timerInterval);
-
   currentGroupIndex++;
   if (currentGroupIndex < groups.length) {
     initQuestions();
@@ -221,10 +194,9 @@ function renderResults() {
   groups.forEach(g => {
     const div = document.createElement("div");
     div.className = "result-item";
-    const detailText = `Preguntas respondidas: ${g.answered}`;
     div.innerHTML = `
       <div class="group">Grupo ${g.name}</div>
-      <div class="detail">${detailText}</div>
+      <div class="detail">Preguntas respondidas: ${g.answered}</div>
       <div class="score">${g.score} pts</div>
     `;
     resultsList.appendChild(div);
@@ -236,11 +208,9 @@ function useLifeline5050() {
   if (lifelinesUsed["50/50"]) return;
   const q = questionsPool[currentQuestionIndex];
   if (!q) return;
-
   const incorrectKeys = ["A", "B", "C", "D"].filter(k => k !== q.correcta);
   shuffleArray(incorrectKeys);
   const toHide = incorrectKeys.slice(0, 2);
-
   toHide.forEach(k => {
     const btn = answerButtons.find(b => b.dataset.key === k);
     if (btn) {
@@ -250,11 +220,9 @@ function useLifeline5050() {
       btn.classList.add("disabled");
     }
   });
-
   lifelinesUsed["50/50"] = true;
   lifeline5050.classList.add("used");
 }
-
 function useLifelineAudience() {
   if (liflinesLockedDuringAnswer()) return;
   if (lifelinesUsed["audience"]) return;
@@ -262,20 +230,31 @@ function useLifelineAudience() {
   lifelinesUsed["audience"] = true;
   lifelineAudience.classList.add("used");
 }
-
 function liflinesLockedDuringAnswer() {
   return answerButtons.every(b => b.disabled);
 }
-
 function resetLifelinesUI() {
   lifelinesUsed["50/50"] = false;
   lifelinesUsed["audience"] = false;
   lifeline5050.classList.remove("used");
   lifelineAudience.classList.remove("used");
 }
-
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    const t = arr[i];
-    arr[i] = arr[j];
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Eventos DOM
+document.addEventListener("DOMContentLoaded", () => {
+  showScreen("start");
+
+  // Botón COMENZAR
+  btnStart.addEventListener("click", () => {
+    const val = parseInt(groupCountSelect.value, 10);
+    totalGroups = Math.min(4, Math.max(1, val));
+    initGroups(totalGroups);
+    initQuestions();
+    groupNameEl.text
