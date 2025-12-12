@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>¿Quién Quiere Ser Millonario? - Prevención</title>
 
-    <link rel="stylesheet" href="/style.css" />
+    <!-- CSS CORRECTO -->
+    <link rel="stylesheet" href="../style.css" />
 </head>
 <body>
 
     <!-- LOGOS -->
     <div class="header-logos">
-        <img src="/logo2.png" alt="Logo izquierda">
-        <img src="/logo.png" alt="Logo derecha">
+        <img src="./logo2.png" alt="Logo izquierda">
+        <img src="./logo.png" alt="Logo derecha">
     </div>
 
     <!-- PANTALLA INICIO -->
@@ -45,7 +46,7 @@
         <div class="contenedor-central">
             <div class="cronometro" id="contador">20</div>
 
-            <img src="/prevencionista.png" class="prevencionista">
+            <img src="./prevencionista.png" class="prevencionista">
 
             <div class="comodines">
                 <button class="comodin" id="comodin5050">50/50</button>
@@ -75,6 +76,7 @@
         <button class="btn" onclick="location.reload()">Reiniciar</button>
     </div>
 
-    <script src="/src/main.js" type="module"></script>
+    <!-- JS CORRECTO -->
+    <script type="module" src="../src/main.js"></script>
 </body>
 </html>
