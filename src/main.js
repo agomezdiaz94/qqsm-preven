@@ -1,16 +1,15 @@
-﻿import { preguntas } from "./preguntas.js";
+﻿import { preguntas } from "../preguntas.js";
 
 let preguntasDisponibles = [...preguntas];
 let preguntaActual = null;
+
 let timer = null;
 let tiempo = 20;
+
 let grupoActual = 1;
 let totalGrupos = 1;
-let puntajes = { 1: 0, 2: 0, 3: 0, 4: 0 };
 
-/* ================================
-   CAMBIO DE PANTALLAS
-================================ */
+let puntajes = { 1: 0, 2: 0, 3: 0, 4: 0 };
 
 function mostrarPantalla(id) {
     document.querySelectorAll(".pantalla").forEach(p => p.classList.add("oculto"));
@@ -18,10 +17,7 @@ function mostrarPantalla(id) {
     document.getElementById(id).classList.add("visible");
 }
 
-/* ================================
-   INICIO
-================================ */
-
+/* INICIO */
 document.getElementById("btnContinuarGrupos").addEventListener("click", () => {
     totalGrupos = parseInt(document.getElementById("cantidadGrupos").value);
     grupoActual = 1;
@@ -29,22 +25,11 @@ document.getElementById("btnContinuarGrupos").addEventListener("click", () => {
     mostrarPantalla("pantalla-listos");
 });
 
-/* ================================
-   PANTALLA LISTOS
-================================ */
+/* LISTOS */
+document.getElementById("btnListosSi").addEventListener("click", () => iniciarJuego());
+document.getElementById("btnListosNo").addEventListener("click", () => alert("Avisen cuando estén listos 🙂"));
 
-document.getElementById("btnListosSi").addEventListener("click", () => {
-    iniciarJuego();
-});
-
-document.getElementById("btnListosNo").addEventListener("click", () => {
-    alert("Avisen cuando estén listos 🙂");
-});
-
-/* ================================
-   JUEGO
-================================ */
-
+/* JUEGO */
 function iniciarJuego() {
     preguntasDisponibles = [...preguntas];
     siguientePregunta();
@@ -63,21 +48,17 @@ function iniciarCronometro() {
 
         if (tiempo <= 0) {
             clearInterval(timer);
-            bloquearRespuestas();
+            bloquear();
             setTimeout(siguienteGrupo, 1500);
         }
     }, 1000);
 }
 
 function siguientePregunta() {
-    if (preguntasDisponibles.length === 0) {
-        siguienteGrupo();
-        return;
-    }
+    if (preguntasDisponibles.length === 0) return siguienteGrupo();
 
-    const randomIndex = Math.floor(Math.random() * preguntasDisponibles.length);
-    preguntaActual = preguntasDisponibles[randomIndex];
-    preguntasDisponibles.splice(randomIndex, 1);
+    const i = Math.floor(Math.random() * preguntasDisponibles.length);
+    preguntaActual = preguntasDisponibles.splice(i, 1)[0];
 
     document.getElementById("pregunta").innerText = preguntaActual.pregunta;
 
@@ -86,54 +67,45 @@ function siguientePregunta() {
     document.getElementById("btnC").innerText = `C) ${preguntaActual.respuestas.C}`;
     document.getElementById("btnD").innerText = `D) ${preguntaActual.respuestas.D}`;
 
-    limpiarRespuestas();
+    limpiar();
 }
 
-function limpiarRespuestas() {
-    document.querySelectorAll(".opcion").forEach(b => {
-        b.classList.remove("correcta", "incorrecta");
-        b.disabled = false;
+function limpiar() {
+    document.querySelectorAll(".opcion").forEach(btn => {
+        btn.disabled = false;
+        btn.classList.remove("correcta", "incorrecta");
     });
 }
 
-function bloquearRespuestas() {
-    document.querySelectorAll(".opcion").forEach(b => b.disabled = true);
+function bloquear() {
+    document.querySelectorAll(".opcion").forEach(btn => btn.disabled = true);
 }
 
-/* ================================
-   MANEJO DE RESPUESTAS
-================================ */
-
-document.querySelectorAll(".opcion").forEach(boton => {
-    boton.addEventListener("click", () => seleccionarRespuesta(boton.id.replace("btn", "")));
+document.querySelectorAll(".opcion").forEach(btn => {
+    btn.addEventListener("click", () => {
+        let letra = btn.id.replace("btn", "");
+        seleccionarRespuesta(letra);
+    });
 });
 
 function seleccionarRespuesta(letra) {
     clearInterval(timer);
 
     const correcta = preguntaActual.correcta;
-    const botonCorrecto = document.getElementById(`btn${correcta}`);
-    const botonElegido = document.getElementById(`btn${letra}`);
+    const btnCorrecto = document.getElementById(`btn${correcta}`);
+    const btnElegido = document.getElementById(`btn${letra}`);
 
     if (letra === correcta) {
-        botonElegido.classList.add("correcta");
         puntajes[grupoActual]++;
+        btnElegido.classList.add("correcta");
     } else {
-        botonElegido.classList.add("incorrecta");
-        botonCorrecto.classList.add("correcta");
+        btnElegido.classList.add("incorrecta");
+        btnCorrecto.classList.add("correcta");
     }
 
-    bloquearRespuestas();
-
-    setTimeout(() => {
-        siguientePregunta();
-        iniciarCronometro();
-    }, 1300);
+    bloquear();
+    setTimeout(() => { siguientePregunta(); iniciarCronometro(); }, 1500);
 }
-
-/* ================================
-   CAMBIO DE GRUPO
-================================ */
 
 function siguienteGrupo() {
     clearInterval(timer);
@@ -148,25 +120,11 @@ function siguienteGrupo() {
     }
 }
 
-/* ================================
-   RESULTADOS FINALES
-================================ */
-
+/* FINAL */
 function mostrarResultados() {
     mostrarPantalla("pantalla-final");
-
-    document.getElementById("resultado-grupo1").innerText =
-        `Grupo A: ${puntajes[1]} puntos`;
-
-    if (totalGrupos >= 2)
-        document.getElementById("resultado-grupo2").innerText =
-            `Grupo B: ${puntajes[2]} puntos`;
-
-    if (totalGrupos >= 3)
-        document.getElementById("resultado-grupo3").innerText =
-            `Grupo C: ${puntajes[3]} puntos`;
-
-    if (totalGrupos >= 4)
-        document.getElementById("resultado-grupo4").innerText =
-            `Grupo D: ${puntajes[4]} puntos`;
+    document.getElementById("resultado-grupo1").innerText = `Grupo A: ${puntajes[1]} puntos`;
+    if (totalGrupos >= 2) document.getElementById("resultado-grupo2").innerText = `Grupo B: ${puntajes[2]} puntos`;
+    if (totalGrupos >= 3) document.getElementById("resultado-grupo3").innerText = `Grupo C: ${puntajes[3]} puntos`;
+    if (totalGrupos >= 4) document.getElementById("resultado-grupo4").innerText = `Grupo D: ${puntajes[4]} puntos`;
 }

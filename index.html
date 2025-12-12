@@ -1,42 +1,43 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>¿Quién Quiere Ser Millonario? - Prevención</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <!-- LOGOS -->
   <div class="header-logos">
-      <img src="public/logo2.png" alt="logo izquierda">
-      <img src="public/logo.png" alt="logo derecha">
+    <img src="public/logo2.png" class="logo-left">
+    <img src="public/logo.png" class="logo-right">
   </div>
 
   <!-- PANTALLA INICIO -->
-  <main class="pantalla visible" id="pantalla-inicio">
-      <h1 class="titulo">Seleccione la cantidad de grupos</h1>
+  <div class="pantalla visible" id="pantalla-inicio">
+      <h1 class="titulo">Seleccione cantidad de grupos</h1>
 
       <select id="cantidadGrupos" class="select-grupos">
-          <option value="1">1 Grupo</option>
-          <option value="2">2 Grupos</option>
-          <option value="3">3 Grupos</option>
-          <option value="4">4 Grupos</option>
+        <option value="1">1 Grupo</option>
+        <option value="2">2 Grupos</option>
+        <option value="3">3 Grupos</option>
+        <option value="4">4 Grupos</option>
       </select>
 
       <button class="btn" id="btnContinuarGrupos">COMENZAR</button>
-  </main>
+  </div>
 
   <!-- PANTALLA LISTOS -->
-  <section class="pantalla oculto" id="pantalla-listos">
+  <div class="pantalla oculto" id="pantalla-listos">
       <h2 id="mensajeListos"></h2>
+
       <button class="btn verde" id="btnListosSi">SÍ</button>
       <button class="btn rojo" id="btnListosNo">NO</button>
-  </section>
+  </div>
 
   <!-- PANTALLA JUEGO -->
-  <section class="pantalla oculto" id="pantalla-juego">
+  <div class="pantalla oculto" id="pantalla-juego">
 
       <div class="grupo-actual" id="grupo-actual">Grupo A</div>
 
@@ -59,20 +60,18 @@
           <button class="opcion" id="btnC">C)</button>
           <button class="opcion" id="btnD">D)</button>
       </div>
-
-  </section>
+  </div>
 
   <!-- PANTALLA FINAL -->
-  <section class="pantalla oculto" id="pantalla-final">
+  <div class="pantalla oculto" id="pantalla-final">
       <h1>Resultados Finales</h1>
       <p id="resultado-grupo1"></p>
       <p id="resultado-grupo2"></p>
       <p id="resultado-grupo3"></p>
       <p id="resultado-grupo4"></p>
       <button class="btn" onclick="location.reload()">Reiniciar</button>
-  </section>
+  </div>
 
-  <!-- Scripts -->
   <script type="module" src="src/main.js"></script>
 </body>
 </html>

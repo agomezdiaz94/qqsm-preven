@@ -1,8 +1,4 @@
-﻿/* ===========================
-   ESTILO GENERAL
-=========================== */
-
-* {
+﻿* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -15,146 +11,150 @@ body {
     overflow: hidden;
 }
 
-/* LOGOS */
 .header-logos {
     position: fixed;
-    top: 15px;
+    top: 10px;
     left: 0;
     width: 100%;
     display: flex;
     justify-content: space-between;
     padding: 0 25px;
-    z-index: 20;
+    z-index: 10;
 }
 
 .header-logos img {
-    height: 85px;
+    height: 90px;
 }
 
 /* PANTALLAS */
-
 .pantalla {
+    display: none;
     width: 100%;
     height: 100vh;
-    display: none;
-    padding-top: 160px;
     text-align: center;
+    padding-top: 150px;
 }
 
 .visible { display: block !important; }
 .oculto { display: none !important; }
 
+/* INICIO */
 .titulo {
     font-size: 3rem;
-    margin-bottom: 25px;
+    margin-bottom: 35px;
 }
 
 .select-grupos {
     padding: 15px;
-    border-radius: 14px;
-    font-size: 1.5rem;
-    width: 260px;
-    font-weight: bold;
+    font-size: 1.7rem;
+    border-radius: 12px;
     color: #001a3d;
+    font-weight: bold;
+    width: 280px;
 }
 
 .btn {
     background: #ffd700;
-    padding: 15px 28px;
-    border-radius: 14px;
-    font-size: 1.4rem;
+    padding: 18px 35px;
+    font-size: 1.5rem;
+    border-radius: 15px;
+    border: none;
+    margin-top: 25px;
     font-weight: bold;
     cursor: pointer;
-    border: none;
-    margin-top: 20px;
 }
 
-.btn:hover { background: #ffee57; }
-.verde { background: #11cc44 !important; color: white; }
-.rojo { background: #cc1133 !important; color: white; }
+.btn:hover {
+    background: #ffee57;
+}
 
-/* Juego */
+.verde { background: #11cc44 !important; color: white !important; }
+.rojo { background: #cc1133 !important; color: white !important; }
 
+/* JUEGO */
 .grupo-actual {
-    font-size: 2.5rem;
+    font-size: 2.7rem;
     color: #ffd700;
     margin-bottom: 25px;
 }
 
 .contenedor-central {
-    width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
     position: relative;
 }
 
 .cronometro {
     position: absolute;
     left: 5%;
-    top: 30%;
-    font-size: 3rem;
+    font-size: 3.7rem;
     background: #111;
-    border-radius: 40px;
-    padding: 15px 35px;
+    padding: 18px 40px;
+    border-radius: 50px;
     border: 4px solid #ffd700;
 }
 
 .prevencionista {
-    width: 430px;
+    width: 450px;
 }
 
 .comodines {
     position: absolute;
     right: 5%;
-    top: 30%;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
 .comodin {
-    width: 100px;
-    height: 100px;
-    background: #004080;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     border: 4px solid #ffd700;
+    background: #004080;
     color: white;
-    font-size: 1.3rem;
-    cursor: pointer;
+    font-size: 1.2rem;
 }
 
+/* PREGUNTA */
 .pregunta-box {
-    margin: 40px auto;
+    margin-top: 40px;
     width: 85%;
-    background: rgba(0,0,50,0.8);
+    margin: auto;
+    background: rgba(0, 30, 80, 0.9);
     border: 4px solid #ffd700;
-    padding: 20px;
-    border-radius: 18px;
+    border-radius: 20px;
+    padding: 25px;
     font-size: 2rem;
     min-height: 120px;
 }
 
+/* OPCIONES */
 .opciones {
+    margin-top: 30px;
     width: 85%;
     margin: auto;
     display: grid;
-    gap: 20px;
     grid-template-columns: 1fr 1fr;
+    gap: 25px;
 }
 
 .opcion {
     background: #003c7a;
     border: 3px solid #ffd700;
     padding: 20px;
-    font-size: 1.6rem;
-    border-radius: 14px;
+    font-size: 1.7rem;
+    border-radius: 15px;
+    min-height: 90px;
     cursor: pointer;
+    color: white;
 }
 
-.opcion.correcta { background: #0cc444 !important; border-color: white; }
-.opcion.incorrecta { background: #cc0022 !important; border-color: white; }
+.opcion:hover { background: #0055c9; }
+.opcion.correcta { background: #11cc44; border-color: white; }
+.opcion.incorrecta { background: #cc1133; border-color: white; }
 
-/* Final */
-
-#pantalla-final h1 { font-size: 3rem; }
-#pantalla-final p { font-size: 1.8rem; margin: 20px; }
+/* FINAL */
+#pantalla-final h1 { font-size: 3rem; margin-bottom: 30px; }
+#pantalla-final p { font-size: 2rem; margin-top: 20px; }
