@@ -74,9 +74,8 @@ function initGroups(n) {
   currentGroupIndex = 0;
 }
 
-// Preparar preguntas (copia para el juego)
+// Preparar preguntas
 function initQuestions() {
-  // Copia profunda simple
   questionsPool = PREGUNTAS.map(q => ({ ...q, respuestas: { ...q.respuestas } }));
   currentQuestionIndex = 0;
 }
@@ -100,7 +99,6 @@ function startTimer() {
     updateTimerDisplay();
     if (timerValue <= 0) {
       clearInterval(timerInterval);
-      // Tiempo agotado: cerrar la pregunta y avanzar
       lockAnswers();
       revealCorrect(false);
       proceedAfterQuestion();
@@ -125,7 +123,6 @@ function resetAnswers() {
   answerButtons.forEach(btn => {
     btn.classList.remove("correct", "incorrect", "disabled");
     btn.disabled = false;
-    // Restaurar visibilidad
     btn.style.visibility = "visible";
     btn.style.opacity = "1";
   });
@@ -140,12 +137,10 @@ function lockAnswers() {
 function loadQuestion() {
   const q = questionsPool[currentQuestionIndex];
   if (!q) {
-    // Sin más preguntas para este grupo => avanzar
     nextGroupOrResults();
     return;
   }
 
-  // Sonido de pregunta
   try { sfxQuestion.currentTime = 0; sfxQuestion.play().catch(()=>{}); } catch (e) {}
 
   questionTextEl.textContent = q.pregunta;
@@ -176,18 +171,15 @@ function onAnswerClick(key) {
     try { sfxCorrect.currentTime = 0; sfxCorrect.play().catch(()=>{}); } catch (e) {}
   } else {
     clickedBtn.classList.add("incorrect");
-    // Marcar la correcta en verde para feedback
     const correctBtn = answerButtons.find(b => b.dataset.key === q.correcta);
     if (correctBtn) correctBtn.classList.add("correct");
     try { sfxIncorrect.currentTime = 0; sfxIncorrect.play().catch(()=>{}); } catch (e) {}
   }
 
   groups[currentGroupIndex].answered += 1;
-
   proceedAfterQuestion();
 }
 
-// Mostrar correcta si fue por tiempo
 function revealCorrect(playSound = false) {
   const q = questionsPool[currentQuestionIndex];
   if (!q) return;
@@ -198,40 +190,32 @@ function revealCorrect(playSound = false) {
   }
 }
 
-// Después de responder/tiempo
 function proceedAfterQuestion() {
-  // Pequeña pausa para ver el color
   setTimeout(() => {
     currentQuestionIndex++;
-    // Si quedan preguntas para este grupo, seguimos
     if (currentQuestionIndex < questionsPool.length) {
       loadQuestion();
     } else {
-      // Terminó el set de preguntas para este grupo
       nextGroupOrResults();
     }
   }, 1200);
 }
 
-// Avanzar a siguiente grupo o resultados
 function nextGroupOrResults() {
   clearInterval(timerInterval);
 
   currentGroupIndex++;
   if (currentGroupIndex < groups.length) {
-    // Preparar siguiente grupo
     initQuestions();
     groupNameEl.textContent = `Grupo ${groups[currentGroupIndex].name}`;
     updateReadyText();
     showScreen("ready");
   } else {
-    // Resultados finales
     renderResults();
     showScreen("results");
   }
 }
 
-// Renderizar resultados
 function renderResults() {
   resultsList.innerHTML = "";
   groups.forEach(g => {
@@ -247,14 +231,13 @@ function renderResults() {
   });
 }
 
-// Comodín 50/50: oculta dos incorrectas
+// Comodines
 function useLifeline5050() {
   if (lifelinesUsed["50/50"]) return;
   const q = questionsPool[currentQuestionIndex];
   if (!q) return;
 
   const incorrectKeys = ["A", "B", "C", "D"].filter(k => k !== q.correcta);
-  // elegir aleatoriamente 2 para ocultar
   shuffleArray(incorrectKeys);
   const toHide = incorrectKeys.slice(0, 2);
 
@@ -272,7 +255,6 @@ function useLifeline5050() {
   lifeline5050.classList.add("used");
 }
 
-// Comodín Público: pausa el tiempo
 function useLifelineAudience() {
   if (liflinesLockedDuringAnswer()) return;
   if (lifelinesUsed["audience"]) return;
@@ -281,13 +263,10 @@ function useLifelineAudience() {
   lifelineAudience.classList.add("used");
 }
 
-// Ayuda: evitar uso mientras está bloqueado
 function liflinesLockedDuringAnswer() {
-  // Si todas las respuestas están disabled, ya se respondió
   return answerButtons.every(b => b.disabled);
 }
 
-// Reset UI de comodines para nueva pregunta
 function resetLifelinesUI() {
   lifelinesUsed["50/50"] = false;
   lifelinesUsed["audience"] = false;
@@ -295,70 +274,8 @@ function resetLifelinesUI() {
   lifelineAudience.classList.remove("used");
 }
 
-// Shuffle utilidad
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     const t = arr[i];
     arr[i] = arr[j];
-    arr[j] = t;
-  }
-  return arr;
-}
-
-// Eventos
-btnStart.addEventListener("click", () => {
-  const val = parseInt(groupCountSelect.value, 10);
-  totalGroups = Math.min(4, Math.max(1, val));
-
-  initGroups(totalGroups);
-  initQuestions();
-
-  groupNameEl.textContent = `Grupo ${groups[currentGroupIndex].name}`;
-  updateReadyText();
-  showScreen("ready");
-});
-
-btnReadyYes.addEventListener("click", () => {
-  showScreen("game");
-  loadQuestion();
-});
-btnReadyNo.addEventListener("click", () => {
-  // Si no está listo, igual avanzamos a juego (o se podría esperar)
-  showScreen("game");
-  loadQuestion();
-});
-
-// Respuestas
-answerButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    const key = btn.dataset.key;
-    onAnswerClick(key);
-  });
-});
-
-// Comodines
-lifeline5050.addEventListener("click", () => {
-  useLifeline5050();
-});
-lifelineAudience.addEventListener("click", () => {
-  useLifelineAudience();
-});
-
-// Reiniciar
-btnRestart.addEventListener("click", () => {
-  // Volver a inicio
-  showScreen("start");
-});
-
-// Evitar que el espacio/enter disparen scroll
-window.addEventListener("keydown", (e) => {
-  if (["Space", "Enter"].includes(e.code)) {
-    e.preventDefault();
-  }
-});
-
-// Asegurar que al cargar, la pantalla inicio esté visible
-document.addEventListener("DOMContentLoaded", () => {
-  showScreen("start");
-});
