@@ -1,252 +1,120 @@
 import { preguntas } from "./preguntas.js";
 
-// PANTALLAS
+let totalGrupos = 1;
+let grupoActual = 1;
+let puntajes = {};
+let indicePregunta = 0;
+let tiempo = 20;
+let intervalo;
+
+// ELEMENTOS
 const pantallaInicio = document.getElementById("pantalla-inicio");
 const pantallaListos = document.getElementById("pantalla-listos");
 const pantallaJuego = document.getElementById("pantalla-juego");
 const pantallaFinal = document.getElementById("pantalla-final");
 
-// ELEMENTOS
-const selectorGrupos = document.getElementById("cantidadGrupos");
-const btnContinuarGrupos = document.getElementById("btnContinuarGrupos");
-
-const btnListosSi = document.getElementById("btnListosSi");
-const btnListosNo = document.getElementById("btnListosNo");
-
+const preguntaBox = document.getElementById("pregunta");
+const contador = document.getElementById("contador");
 const grupoActualTexto = document.getElementById("grupo-actual");
-const preguntaDiv = document.getElementById("pregunta");
-const contadorDiv = document.getElementById("contador");
 
-const btnA = document.getElementById("btnA");
-const btnB = document.getElementById("btnB");
-const btnC = document.getElementById("btnC");
-const btnD = document.getElementById("btnD");
-
-const comodin5050 = document.getElementById("comodin5050");
-const comodinPublico = document.getElementById("comodinPublico");
-
-// RESULTADOS
-const res1 = document.getElementById("resultado-grupo1");
-const res2 = document.getElementById("resultado-grupo2");
-const res3 = document.getElementById("resultado-grupo3");
-const res4 = document.getElementById("resultado-grupo4");
-
-// VARIABLES
-let grupos = [];
-let preguntasSeleccionadas = {};
-let indicePregunta = 0;
-let turnoGrupo = 0;
-let timer = null;
-let tiempo = 20;
-
-let puntajes = {};
-["A", "B", "C", "D"].forEach(g => {
-    puntajes[g] = { buenas: 0, malas: 0 };
-});
-
-// SONIDOS (Correctos)
-const sonidoPregunta = new Audio("/sounds/pregunta.mp3");
-const sonidoCorrecto = new Audio("/sounds/correcto.mp3");
-const sonidoIncorrecto = new Audio("/sounds/incorrecto.mp3");
-
-// --------------------------------------
-// OCULTAR TODO
-// --------------------------------------
-function ocultarTodo() {
-    pantallaInicio.classList.add("oculto");
-    pantallaListos.classList.add("oculto");
-    pantallaJuego.classList.add("oculto");
-    pantallaFinal.classList.add("oculto");
-}
-
-// --------------------------------------
-// SELECCIÓN DE PREGUNTAS
-// --------------------------------------
-function seleccionarPreguntas() {
-    grupos.forEach(g => {
-        let copia = [...preguntas];
-        preguntasSeleccionadas[g] = [];
-
-        for (let i = 0; i < 5; i++) {
-            const idx = Math.floor(Math.random() * copia.length);
-            preguntasSeleccionadas[g].push(copia.splice(idx, 1)[0]);
-        }
-    });
-}
-
-// --------------------------------------
-// FLUJO INICIAL
-// --------------------------------------
-btnContinuarGrupos.addEventListener("click", () => {
-    const cantidad = parseInt(selectorGrupos.value);
-    grupos = ["A", "B", "C", "D"].slice(0, cantidad);
-
-    seleccionarPreguntas();
-
+// BOTONES
+document.getElementById("btnContinuarGrupos").addEventListener("click", () => {
+    totalGrupos = parseInt(document.getElementById("cantidadGrupos").value);
+    mostrarPantalla(pantallaInicio, pantallaListos);
     document.getElementById("mensajeListos").textContent =
-        `¿Está listo el Grupo ${grupos[0]}?`;
-
-    ocultarTodo();
-    pantallaListos.classList.remove("oculto");
+        `¿Está listo el grupo ${grupoActual}?`;
 });
 
-btnListosNo.addEventListener("click", () => {
-    alert("Avísenme cuando estén listos 😄");
+document.getElementById("btnListosSi").addEventListener("click", () => {
+    iniciarJuego();
 });
 
-btnListosSi.addEventListener("click", () => {
-    ocultarTodo();
-    pantallaJuego.classList.remove("oculto");
-    iniciarRonda();
+document.getElementById("btnListosNo").addEventListener("click", () => {
+    alert("Avisen cuando estén listos 🙂");
 });
 
-// --------------------------------------
-// MOSTRAR PREGUNTA
-// --------------------------------------
-function iniciarRonda() {
-    indicePregunta = 0;
-    mostrarPregunta();
+function mostrarPantalla(ocultar, mostrar) {
+    ocultar.classList.remove("visible");
+    ocultar.classList.add("oculto");
+
+    mostrar.classList.remove("oculto");
+    mostrar.classList.add("visible");
 }
 
-function mostrarPregunta() {
-    const grupo = grupos[turnoGrupo];
+function iniciarJuego() {
+    mostrarPantalla(pantallaListos, pantallaJuego);
+    grupoActualTexto.textContent = `Grupo ${grupoActual}`;
+    puntajes[grupoActual] = 0;
+    indicePregunta = 0;
+    cargarPregunta();
+}
 
-    grupoActualTexto.textContent = `Grupo ${grupo}`;
+function cargarPregunta() {
+    if (indicePregunta >= preguntas.length) {
+        siguienteGrupo();
+        return;
+    }
 
-    const p = preguntasSeleccionadas[grupo][indicePregunta];
-    preguntaDiv.textContent = p.pregunta;
+    const p = preguntas[indicePregunta];
+    preguntaBox.textContent = p.pregunta;
 
-    btnA.textContent = `A) ${p.respuestas.A}`;
-    btnB.textContent = `B) ${p.respuestas.B}`;
-    btnC.textContent = `C) ${p.respuestas.C}`;
-    btnD.textContent = `D) ${p.respuestas.D}`;
-
-    document.querySelectorAll(".opcion").forEach(b => {
-        b.disabled = false;
-        b.classList.remove("correcta", "incorrecta");
-        b.style.visibility = "visible";
-    });
+    document.getElementById("btnA").textContent = "A) " + p.respuestas.A;
+    document.getElementById("btnB").textContent = "B) " + p.respuestas.B;
+    document.getElementById("btnC").textContent = "C) " + p.respuestas.C;
+    document.getElementById("btnD").textContent = "D) " + p.respuestas.D;
 
     tiempo = 20;
-    contadorDiv.textContent = tiempo;
-    contadorDiv.style.color = "white";
+    contador.textContent = tiempo;
 
-    sonidoPregunta.play();
-
-    iniciarCronometro();
-}
-
-// --------------------------------------
-// CRONÓMETRO
-// --------------------------------------
-function iniciarCronometro() {
-    clearInterval(timer);
-
-    timer = setInterval(() => {
+    clearInterval(intervalo);
+    intervalo = setInterval(() => {
         tiempo--;
-        contadorDiv.textContent = tiempo;
-
-        if (tiempo <= 5) contadorDiv.style.color = "red";
+        contador.textContent = tiempo;
 
         if (tiempo <= 0) {
-            clearInterval(timer);
-            registrarIncorrecta();
+            clearInterval(intervalo);
+            indicePregunta++;
+            cargarPregunta();
         }
     }, 1000);
 }
 
-// --------------------------------------
-// RESPUESTAS
-// --------------------------------------
 window.seleccionarRespuesta = function (letra) {
-    clearInterval(timer);
+    const p = preguntas[indicePregunta];
 
-    const grupo = grupos[turnoGrupo];
-    const p = preguntasSeleccionadas[grupo][indicePregunta];
-    const correcta = p.correcta;
-
-    const botones = { A: btnA, B: btnB, C: btnC, D: btnD };
-
-    if (letra === correcta) {
-        sonidoCorrecto.play();
-        botones[letra].classList.add("correcta");
-        puntajes[grupo].buenas++;
-    } else {
-        sonidoIncorrecto.play();
-        botones[letra].classList.add("incorrecta");
-        puntajes[grupo].malas++;
+    if (letra === p.correcta) {
+        puntajes[grupoActual]++;
     }
 
-    botones[correcta].classList.add("correcta");
-
-    Object.values(botones).forEach(b => b.disabled = true);
-
-    setTimeout(avanzar, 2000);
+    indicePregunta++;
+    cargarPregunta();
 };
 
-function registrarIncorrecta() {
-    const grupo = grupos[turnoGrupo];
-    puntajes[grupo].malas++;
-    avanzar();
-}
+function siguienteGrupo() {
+    grupoActual++;
 
-// --------------------------------------
-// AVANZAR
-// --------------------------------------
-function avanzar() {
-    indicePregunta++;
-
-    if (indicePregunta >= 5) {
-        turnoGrupo++;
-
-        if (turnoGrupo >= grupos.length) {
-            finalizarJuego();
-            return;
-        }
-
-        document.getElementById("mensajeListos").textContent =
-            `¿Está listo el Grupo ${grupos[turnoGrupo]}?`;
-
-        ocultarTodo();
-        pantallaListos.classList.remove("oculto");
+    if (grupoActual > totalGrupos) {
+        mostrarResultados();
         return;
     }
 
-    mostrarPregunta();
+    mostrarPantalla(pantallaJuego, pantallaListos);
+    document.getElementById("mensajeListos").textContent =
+        `¿Está listo el grupo ${grupoActual}?`;
 }
 
-// --------------------------------------
-// COMODINES
-// --------------------------------------
-comodin5050.addEventListener("click", () => {
-    const grupo = grupos[turnoGrupo];
-    const p = preguntasSeleccionadas[grupo][indicePregunta];
-    const incorrectas = ["A","B","C","D"].filter(x => x !== p.correcta);
+function mostrarResultados() {
+    mostrarPantalla(pantallaJuego, pantallaFinal);
 
-    const aEliminar = incorrectas.sort(() => Math.random() - 0.5).slice(0,2);
+    document.getElementById("resultado-grupo1").textContent =
+        puntajes[1] !== undefined ? `Grupo 1: ${puntajes[1]} puntos` : "";
 
-    aEliminar.forEach(letra => {
-        document.getElementById("btn" + letra).style.visibility = "hidden";
-    });
+    document.getElementById("resultado-grupo2").textContent =
+        puntajes[2] !== undefined ? `Grupo 2: ${puntajes[2]} puntos` : "";
 
-    comodin5050.disabled = true;
-});
+    document.getElementById("resultado-grupo3").textContent =
+        puntajes[3] !== undefined ? `Grupo 3: ${puntajes[3]} puntos` : "";
 
-comodinPublico.addEventListener("click", () => {
-    clearInterval(timer);
-    alert("El público votó. ¡Piensen con calma!");
-    comodinPublico.disabled = true;
-});
-
-// --------------------------------------
-// FINAL
-// --------------------------------------
-function finalizarJuego() {
-    ocultarTodo();
-    pantallaFinal.classList.remove("oculto");
-
-    res1.textContent = grupos[0] ? `Grupo ${grupos[0]} → Buenas: ${puntajes[grupos[0]].buenas}, Malas: ${puntajes[grupos[0]].malas}` : "";
-    res2.textContent = grupos[1] ? `Grupo ${grupos[1]} → Buenas: ${puntajes[grupos[1]].buenas}, Malas: ${puntajes[grupos[1]].malas}` : "";
-    res3.textContent = grupos[2] ? `Grupo ${grupos[2]} → Buenas: ${puntajes[grupos[2]].buenas}, Malas: ${puntajes[grupos[2]].malas}` : "";
-    res4.textContent = grupos[3] ? `Grupo ${grupos[3]} → Buenas: ${puntajes[grupos[3]].buenas}, Malas: ${puntajes[grupos[3]].malas}` : "";
+    document.getElementById("resultado-grupo4").textContent =
+        puntajes[4] !== undefined ? `Grupo 4: ${puntajes[4]} puntos` : "";
 }
