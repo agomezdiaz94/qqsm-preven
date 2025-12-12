@@ -1,11 +1,12 @@
 ﻿/* Juego estilo “¿Quién quiere ser millonario?” sin frameworks */
 
-// Elementos principales
+// Pantallas
 const screenStart = document.getElementById("screen-start");
 const screenReady = document.getElementById("screen-ready");
 const screenGame = document.getElementById("screen-game");
 const screenResults = document.getElementById("screen-results");
 
+// Botones y elementos
 const btnStart = document.getElementById("btn-start");
 const groupCountSelect = document.getElementById("group-count");
 
@@ -35,22 +36,16 @@ const sfxQuestion = document.getElementById("sfx-question");
 const sfxCorrect = document.getElementById("sfx-correct");
 const sfxIncorrect = document.getElementById("sfx-incorrect");
 
-// Estado de juego
+// Estado
 let totalGroups = 1;
 let groups = [];
 let currentGroupIndex = 0;
-
 let questionsPool = [];
 let currentQuestionIndex = 0;
-
 let timerValue = 20;
 let timerInterval = null;
 let isPaused = false;
-
-let lifelinesUsed = {
-  "50/50": false,
-  "audience": false
-};
+let lifelinesUsed = { "50/50": false, "audience": false };
 
 // Cambiar pantalla
 function showScreen(id) {
@@ -75,7 +70,7 @@ function initQuestions() {
   currentQuestionIndex = 0;
 }
 
-// Texto de pantalla Ready
+// Texto pantalla Ready
 function updateReadyText() {
   const g = groups[currentGroupIndex];
   readyText.textContent = `¿Está listo el Grupo ${g.name}?`;
@@ -87,7 +82,6 @@ function startTimer() {
   timerValue = 20;
   isPaused = false;
   updateTimerDisplay();
-
   timerInterval = setInterval(() => {
     if (isPaused) return;
     timerValue--;
@@ -95,13 +89,12 @@ function startTimer() {
     if (timerValue <= 0) {
       clearInterval(timerInterval);
       lockAnswers();
-      revealCorrect(false);
+      revealCorrect();
       proceedAfterQuestion();
     }
   }, 1000);
 }
 function pauseTimer() { isPaused = true; }
-function resumeTimer() { isPaused = false; }
 function updateTimerDisplay() { timerEl.textContent = String(timerValue); }
 
 // Respuestas
@@ -118,15 +111,12 @@ function lockAnswers() { answerButtons.forEach(btn => btn.disabled = true); }
 function loadQuestion() {
   const q = questionsPool[currentQuestionIndex];
   if (!q) { nextGroupOrResults(); return; }
-
   try { sfxQuestion.currentTime = 0; sfxQuestion.play().catch(()=>{}); } catch (e) {}
-
   questionTextEl.textContent = q.pregunta;
   answerLabels.A.textContent = q.respuestas.A;
   answerLabels.B.textContent = q.respuestas.B;
   answerLabels.C.textContent = q.respuestas.C;
   answerLabels.D.textContent = q.respuestas.D;
-
   resetAnswers();
   resetLifelinesUI();
   startTimer();
@@ -135,13 +125,10 @@ function loadQuestion() {
 function onAnswerClick(key) {
   const q = questionsPool[currentQuestionIndex];
   if (!q) return;
-
   lockAnswers();
   clearInterval(timerInterval);
-
   const isCorrect = key === q.correcta;
   const clickedBtn = answerButtons.find(b => b.dataset.key === key);
-
   if (isCorrect) {
     clickedBtn.classList.add("correct");
     groups[currentGroupIndex].score += 1;
@@ -152,7 +139,6 @@ function onAnswerClick(key) {
     if (correctBtn) correctBtn.classList.add("correct");
     try { sfxIncorrect.currentTime = 0; sfxIncorrect.play().catch(()=>{}); } catch (e) {}
   }
-
   groups[currentGroupIndex].answered += 1;
   proceedAfterQuestion();
 }
@@ -257,4 +243,10 @@ document.addEventListener("DOMContentLoaded", () => {
     totalGroups = Math.min(4, Math.max(1, val));
     initGroups(totalGroups);
     initQuestions();
-    groupNameEl.text
+    groupNameEl.textContent = `Grupo ${groups[currentGroupIndex].name}`;
+    updateReadyText();
+    showScreen("ready");
+  });
+
+  // Botones Ready
+ 
