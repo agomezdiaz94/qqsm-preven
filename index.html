@@ -2,95 +2,75 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>¿Quién quiere ser millonario? - Seguridad</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>¿Quién quiere ser millonario? - Prevención</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Logos fijos -->
-  <img src="public/logo2.png" alt="Logo Izquierdo" class="logo logo-left" />
-  <img src="public/logo.png" alt="Logo Derecho" class="logo logo-right" />
+  <!-- Pantalla Inicio -->
+  <section id="screen-start" class="screen active">
+    <header class="topbar">
+      <div class="logo-left"><img src="public/logo2.png" alt="Logo Izq" /></div>
+      <div class="logo-right"><img src="public/logo.png" alt="Logo Der" /></div>
+    </header>
 
-  <!-- Contenedor de pantallas -->
-  <main id="app">
-    <!-- Pantalla 1: Inicio -->
-    <section id="screen-start" class="screen active">
-      <div class="screen-content">
-        <h1 class="title">¿Quién quiere ser millonario? - Prevención</h1>
+    <div class="content center">
+      <h1>¿QUIÉN QUIERE SER MILLONARIO? - PREVENCIÓN</h1>
+      <label for="group-count" class="label">Número de grupos:</label>
+      <select id="group-count" class="select">
+        <option selected>1 grupo</option>
+        <option>2 grupos</option>
+        <option>3 grupos</option>
+        <option>4 grupos</option>
+      </select>
+      <button id="btn-start" class="btn gold">COMENZAR</button>
+    </div>
+  </section>
 
-        <div class="selector">
-          <label for="group-count" class="label">Número de grupos:</label>
-          <select id="group-count" class="select">
-            <option value="1">1 grupo</option>
-            <option value="2">2 grupos</option>
-            <option value="3">3 grupos</option>
-            <option value="4">4 grupos</option>
-          </select>
+  <!-- Pantalla Ready -->
+  <section id="screen-ready" class="screen">
+    <div class="content center">
+      <h2 id="ready-text">¿Está listo el Grupo A?</h2>
+      <div class="controls">
+        <button id="btn-ready-yes" class="btn green">SÍ</button>
+        <button id="btn-ready-no" class="btn red">NO</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla Juego -->
+  <section id="screen-game" class="screen">
+    <div class="content game-box">
+      <div class="hud">
+        <div id="group-name" class="badge">Grupo A</div>
+        <div class="timer">Tiempo: <span id="timer">20</span>s</div>
+        <div class="lifelines">
+          <button id="lifeline-5050" class="btn small">50/50</button>
+          <button id="lifeline-audience" class="btn small">Público</button>
         </div>
-
-        <button id="btn-start" class="btn gold">COMENZAR</button>
       </div>
-    </section>
 
-    <!-- Pantalla 2: ¿Están listos? -->
-    <section id="screen-ready" class="screen">
-      <div class="screen-content">
-        <h2 id="ready-text" class="subtitle">¿Está listo el Grupo A?</h2>
-        <div class="actions">
-          <button id="btn-ready-yes" class="btn gold">SÍ</button>
-          <button id="btn-ready-no" class="btn gold ghost">NO</button>
-        </div>
+      <div id="question-text" class="question">Pregunta aquí</div>
+
+      <div class="answers">
+        <button class="answer-btn" data-key="A"><span class="label">A)</span> <span id="answer-A">Respuesta A</span></button>
+        <button class="answer-btn" data-key="B"><span class="label">B)</span> <span id="answer-B">Respuesta B</span></button>
+        <button class="answer-btn" data-key="C"><span class="label">C)</span> <span id="answer-C">Respuesta C</span></button>
+        <button class="answer-btn" data-key="D"><span class="label">D)</span> <span id="answer-D">Respuesta D</span></button>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Pantalla 3: Juego -->
-    <section id="screen-game" class="screen">
-      <div class="screen-content game-layout">
-        <!-- Panel izquierdo: Cronómetro y grupo -->
-        <aside class="left-panel">
-          <div class="group-name" id="group-name">Grupo A</div>
-          <div class="timer" id="timer">20</div>
+  <!-- Pantalla Resultados -->
+  <section id="screen-results" class="screen">
+    <div class="content center">
+      <h2>Resultados</h2>
+      <div id="results-list" class="results"></div>
+      <button id="btn-restart" class="btn gold">Reiniciar</button>
+    </div>
+  </section>
 
-          <div class="lifelines">
-            <button id="lifeline-5050" class="lifeline-btn" title="50/50">50/50</button>
-            <button id="lifeline-audience" class="lifeline-btn" title="Público">Público</button>
-          </div>
-        </aside>
-
-        <!-- Centro: Prevencionista -->
-        <div class="center-figure">
-          <img src="public/prevencionista.png" alt="Prevencionista" class="prevencionista" />
-        </div>
-
-        <!-- Derecha: Caja de preguntas -->
-        <section class="question-box">
-          <div id="question-text" class="question-text">Cargando pregunta...</div>
-          <div class="answers">
-            <button class="answer-btn" data-key="A"><span class="key">A</span><span class="answer-label" id="answer-A">...</span></button>
-            <button class="answer-btn" data-key="B"><span class="key">B</span><span class="answer-label" id="answer-B">...</span></button>
-            <button class="answer-btn" data-key="C"><span class="key">C</span><span class="answer-label" id="answer-C">...</span></button>
-            <button class="answer-btn" data-key="D"><span class="key">D</span><span class="answer-label" id="answer-D">...</span></button>
-          </div>
-        </section>
-      </div>
-    </section>
-
-    <!-- Pantalla 4: Resultados -->
-    <section id="screen-results" class="screen">
-      <div class="screen-content">
-        <h2 class="subtitle">Resultados finales</h2>
-        <div id="results-list" class="results-list"></div>
-        <button id="btn-restart" class="btn gold">Reiniciar</button>
-      </div>
-    </section>
-  </main>
-
-  <!-- Sonidos -->
-  <audio id="sfx-question" src="public/sounds/pregunta.mp3" preload="auto"></audio>
-  <audio id="sfx-correct" src="public/sounds/correcto.mp3" preload="auto"></audio>
-  <audio id="sfx-incorrect" src="public/sounds/incorrecto.mp3" preload="auto"></audio>
-
+  <!-- Scripts -->
   <script src="preguntas.js"></script>
   <script src="src/main.js"></script>
 </body>
