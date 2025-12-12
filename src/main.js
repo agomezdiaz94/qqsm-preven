@@ -1,4 +1,4 @@
-﻿/* Juego estilo “¿Quién quiere ser millonario?” sin frameworks */
+﻿/* Juego estilo “¿Quién quiere ser millonario?” */
 
 // Pantallas
 const screenStart = document.getElementById("screen-start");
@@ -64,9 +64,15 @@ function initGroups(n) {
   currentGroupIndex = 0;
 }
 
-// Inicializar preguntas
+// Inicializar preguntas (solo 5 por grupo)
 function initQuestions() {
-  questionsPool = PREGUNTAS.map(q => ({ ...q, respuestas: { ...q.respuestas } }));
+  // Tomar 5 preguntas aleatorias del arreglo global PREGUNTAS
+  const shuffled = [...PREGUNTAS];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  questionsPool = shuffled.slice(0, 5);
   currentQuestionIndex = 0;
 }
 
@@ -237,16 +243,4 @@ function shuffleArray(arr) {
 document.addEventListener("DOMContentLoaded", () => {
   showScreen("start");
 
-  // Botón COMENZAR
-  btnStart.addEventListener("click", () => {
-    const val = parseInt(groupCountSelect.value, 10);
-    totalGroups = Math.min(4, Math.max(1, val));
-    initGroups(totalGroups);
-    initQuestions();
-    groupNameEl.textContent = `Grupo ${groups[currentGroupIndex].name}`;
-    updateReadyText();
-    showScreen("ready");
-  });
-
-  // Botones Ready
- 
+  //
