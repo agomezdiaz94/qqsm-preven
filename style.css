@@ -10,248 +10,151 @@
 }
 
 body {
-    background: #001A3D;
+    background: #001a3d;
     color: white;
     overflow: hidden;
 }
 
-/* ===========================
-   LOGOS SUPERIORES
-=========================== */
-
+/* LOGOS */
 .header-logos {
     position: fixed;
-    top: 10px;
+    top: 15px;
     left: 0;
     width: 100%;
-    z-index: 50;
     display: flex;
     justify-content: space-between;
     padding: 0 25px;
+    z-index: 20;
 }
 
 .header-logos img {
-    height: 95px;
-    object-fit: contain;
+    height: 85px;
 }
 
-/* ===========================
-   PANTALLAS
-=========================== */
+/* PANTALLAS */
 
 .pantalla {
     width: 100%;
     height: 100vh;
-    padding-top: 140px;
-    text-align: center;
     display: none;
+    padding-top: 160px;
+    text-align: center;
 }
 
-.visible {
-    display: block !important;
-}
-
-.oculto {
-    display: none !important;
-}
-
-/* ===========================
-   PANTALLA INICIO
-=========================== */
+.visible { display: block !important; }
+.oculto { display: none !important; }
 
 .titulo {
-    font-size: 3.2rem;
-    color: #FFD700;
-}
-
-.subtitulo {
-    font-size: 1.7rem;
-    margin-top: 10px;
-}
-
-.label {
-    font-size: 1.5rem;
-    margin-top: 40px;
-    display: block;
+    font-size: 3rem;
+    margin-bottom: 25px;
 }
 
 .select-grupos {
     padding: 15px;
+    border-radius: 14px;
     font-size: 1.5rem;
-    margin-top: 12px;
-    border-radius: 12px;
-    border: 3px solid #FFD700;
-    background: white;
-    color: #001A3D;
+    width: 260px;
     font-weight: bold;
+    color: #001a3d;
 }
-
-/* Botones */
 
 .btn {
-    margin-top: 25px;
-    padding: 18px 36px;
-    border-radius: 15px;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-    background: #FFD700;
-    color: #001A3D;
+    background: #ffd700;
+    padding: 15px 28px;
+    border-radius: 14px;
+    font-size: 1.4rem;
     font-weight: bold;
+    cursor: pointer;
+    border: none;
+    margin-top: 20px;
 }
 
-.btn:hover {
-    background: #ffef74;
-}
+.btn:hover { background: #ffee57; }
+.verde { background: #11cc44 !important; color: white; }
+.rojo { background: #cc1133 !important; color: white; }
 
-.verde {
-    background: #11cc44 !important;
-    color: white !important;
-}
-
-.rojo {
-    background: #cc1133 !important;
-    color: white !important;
-}
-
-/* ===========================
-   PANTALLA: ¿ESTÁN LISTOS?
-=========================== */
-
-.mensaje-listos {
-    font-size: 2.4rem;
-    margin-bottom: 40px;
-}
-
-/* ===========================
-   JUEGO
-=========================== */
+/* Juego */
 
 .grupo-actual {
-    font-size: 2.6rem;
-    color: #FFD700;
-    margin-bottom: 20px;
+    font-size: 2.5rem;
+    color: #ffd700;
+    margin-bottom: 25px;
 }
 
 .contenedor-central {
     width: 100%;
+    display: flex;
+    justify-content: center;
     position: relative;
-    margin-top: 20px;
 }
 
-/* Cronómetro */
 .cronometro {
     position: absolute;
     left: 5%;
-    top: 45%;
-    font-size: 3.5rem;
+    top: 30%;
+    font-size: 3rem;
+    background: #111;
+    border-radius: 40px;
     padding: 15px 35px;
-    border-radius: 50px;
-    background: #002860;
-    border: 4px solid #FFD700;
-    box-shadow: 0 0 20px rgba(255,215,0,0.7);
+    border: 4px solid #ffd700;
 }
 
-/* Prevencionista */
 .prevencionista {
-    width: 450px;
-    filter: drop-shadow(0 0 16px rgba(0,0,0,0.6));
+    width: 430px;
 }
 
-/* Comodines */
 .comodines {
     position: absolute;
     right: 5%;
-    top: 40%;
+    top: 30%;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
 .comodin {
-    width: 110px;
-    height: 110px;
+    width: 100px;
+    height: 100px;
+    background: #004080;
     border-radius: 50%;
-    border: 4px solid #FFD700;
-    background: #003c7a;
+    border: 4px solid #ffd700;
     color: white;
+    font-size: 1.3rem;
     cursor: pointer;
-    font-size: 1.2rem;
-    font-weight: bold;
 }
-
-.comodin:hover {
-    background: #0058c5;
-}
-
-/* Caja grande de pregunta */
 
 .pregunta-box {
-    width: 85%;
     margin: 40px auto;
-    padding: 25px;
-    background: rgba(0, 25, 80, 0.85);
-    border: 4px solid #FFD700;
+    width: 85%;
+    background: rgba(0,0,50,0.8);
+    border: 4px solid #ffd700;
+    padding: 20px;
     border-radius: 18px;
     font-size: 2rem;
     min-height: 120px;
-    box-shadow: 0 0 25px rgba(255,215,0,0.4);
 }
-
-/* Opciones */
 
 .opciones {
     width: 85%;
     margin: auto;
     display: grid;
+    gap: 20px;
     grid-template-columns: 1fr 1fr;
-    gap: 18px;
 }
 
 .opcion {
-    padding: 20px;
-    border-radius: 12px;
     background: #003c7a;
-    border: 4px solid #FFD700;
-    font-size: 1.8rem;
-    color: white;
+    border: 3px solid #ffd700;
+    padding: 20px;
+    font-size: 1.6rem;
+    border-radius: 14px;
     cursor: pointer;
-    min-height: 95px;
 }
 
-.opcion:hover {
-    background: #0058c5;
-}
+.opcion.correcta { background: #0cc444 !important; border-color: white; }
+.opcion.incorrecta { background: #cc0022 !important; border-color: white; }
 
-.opcion.correcta {
-    background: #00d442 !important;
-    color: #002000 !important;
-}
+/* Final */
 
-.opcion.incorrecta {
-    background: #cc0022 !important;
-}
-
-/* ===========================
-   PANTALLA FINAL
-=========================== */
-
-#pantalla-final h1 {
-    font-size: 3rem;
-}
-
-#pantalla-final p {
-    font-size: 2rem;
-    margin-top: 18px;
-}
-
-/* ===========================
-   RESPONSIVE
-=========================== */
-
-@media (max-width: 900px) {
-    .prevencionista { width: 260px; }
-    .cronometro { font-size: 2.2rem; }
-    .pregunta-box { font-size: 1.4rem; }
-    .opcion { font-size: 1.2rem; min-height: 60px; }
-}
+#pantalla-final h1 { font-size: 3rem; }
+#pantalla-final p { font-size: 1.8rem; margin: 20px; }
