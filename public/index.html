@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>¿Quién Quiere Ser Millonario? - Prevención</title>
+
+    <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+    <!-- LOGOS -->
+    <div class="header-logos">
+        <img src="/logo2.png" alt="Logo izquierda">
+        <img src="/logo.png" alt="Logo derecha">
+    </div>
+
+    <!-- PANTALLA INICIO -->
+    <div class="pantalla visible" id="pantalla-inicio">
+        <h1 class="titulo">Seleccione la cantidad de grupos</h1>
+
+        <select id="cantidadGrupos" class="select-grupos">
+            <option value="1">1 Grupo</option>
+            <option value="2">2 Grupos</option>
+            <option value="3">3 Grupos</option>
+            <option value="4">4 Grupos</option>
+        </select>
+
+        <button class="btn" id="btnContinuarGrupos">COMENZAR</button>
+    </div>
+
+    <!-- PANTALLA LISTOS -->
+    <div class="pantalla oculto" id="pantalla-listos">
+        <h2 id="mensajeListos"></h2>
+
+        <button class="btn verde" id="btnListosSi">SÍ</button>
+        <button class="btn rojo" id="btnListosNo">NO</button>
+    </div>
+
+    <!-- PANTALLA JUEGO -->
+    <div class="pantalla oculto" id="pantalla-juego">
+
+        <div class="grupo-actual" id="grupo-actual">Grupo X</div>
+
+        <div class="contenedor-central">
+            <div class="cronometro" id="contador">20</div>
+
+            <img src="/prevencionista.png" class="prevencionista">
+
+            <div class="comodines">
+                <button class="comodin" id="comodin5050">50/50</button>
+                <button class="comodin" id="comodinPublico">Público</button>
+            </div>
+        </div>
+
+        <div class="pregunta-box" id="pregunta"></div>
+
+        <div class="opciones">
+            <button class="opcion" id="btnA" onclick="seleccionarRespuesta('A')">A)</button>
+            <button class="opcion" id="btnB" onclick="seleccionarRespuesta('B')">B)</button>
+            <button class="opcion" id="btnC" onclick="seleccionarRespuesta('C')">C)</button>
+            <button class="opcion" id="btnD" onclick="seleccionarRespuesta('D')">D)</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA FINAL -->
+    <div class="pantalla oculto" id="pantalla-final">
+        <h1>Resultados Finales</h1>
+
+        <p id="resultado-grupo1"></p>
+        <p id="resultado-grupo2"></p>
+        <p id="resultado-grupo3"></p>
+        <p id="resultado-grupo4"></p>
+
+        <button class="btn" onclick="location.reload()">Reiniciar</button>
+    </div>
+
+    <script src="/src/main.js" type="module"></script>
+</body>
+</html>
